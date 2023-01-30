@@ -1,0 +1,232 @@
+
+package javafxapplication3;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Camera;
+import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
+import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
+import javafx.animation.*;
+import javafx.application.Application;
+import javafx.scene.*;
+import javafx.scene.paint.*;
+import javafx.scene.shape.*;
+import javafx.scene.transform.*;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+
+
+public class JavaFXApplication3 extends Application {
+    
+    public static int Width=1024;
+    public static int Height=768;
+    
+    @Override
+    public void start(Stage primaryStage) {
+//Objects        
+        Sphere sphere = new Sphere(2.5);
+        sphere.setMaterial(new PhongMaterial(Color.FORESTGREEN));
+
+        sphere.setTranslateZ(10);
+        sphere.setTranslateX(10);
+        sphere.setTranslateZ(10);
+
+        Box box = new Box(5, 5, 5);
+        box.setMaterial(new PhongMaterial(Color.RED));
+        box.setTranslateX(0);
+        box.setTranslateY(0);   
+        box.setTranslateZ(0);
+        
+        Box plane = new Box (45, 0, 45);
+        plane.setMaterial(new PhongMaterial(Color.LIGHTGRAY));
+        plane.setTranslateX(0);
+        plane.setTranslateY(2.5);   
+        plane.setTranslateZ(0);
+        
+// Camera
+        Translate camerapivot = new Translate();
+        Rotate camerayRotate = new Rotate(0, Rotate.Y_AXIS);
+        PerspectiveCamera camera = new PerspectiveCamera(true);
+        camera.getTransforms().addAll (
+                camerapivot,
+                camerayRotate,
+                new Rotate(-80, Rotate.X_AXIS),
+                new Translate(0, 0, -80)
+        );
+
+        // animate the camera position.
+        /*
+        Timeline timeline = new Timeline(
+                new KeyFrame(
+                        Duration.seconds(0), 
+                        new KeyValue(yRotate.angleProperty(), 0)
+                ),
+                new KeyFrame(
+                        Duration.seconds(15), 
+                        new KeyValue(yRotate.angleProperty(), 360)
+                )
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+*/
+//ObjectGroup
+        Group objectgroup = new Group();  
+        objectgroup.getChildren().add(plane);
+        objectgroup.getChildren().add(camera);
+        objectgroup.getChildren().add(box);
+        objectgroup.getChildren().add(sphere);
+
+        
+        Scene scene = new Scene(objectgroup, Width,Height);
+        scene.setCamera(camera);
+        
+       primaryStage.addEventHandler(
+               KeyEvent.KEY_PRESSED, event->{
+       switch(event.getCode())
+           /*
+        {
+        case W:camera.translateYProperty()    
+               .set(camera.getTranslateY()+10);      
+                break;
+        case S:camera.translateYProperty()
+               .set(camera.getTranslateY()-10);
+                break;
+        case A:camera.translateXProperty()
+               .set(camera.getTranslateX()-10);
+                break;
+        case D:camera.translateXProperty()
+               .set(camera.getTranslateX()+10);
+                break;  
+        }   
+*/
+        {
+        case W:  
+                Translate boxupivot = new Translate();
+                Rotate uxRotate = new Rotate(0, Rotate.X_AXIS);
+        box.getTransforms().addAll (
+                boxupivot,
+                uxRotate,
+                new Rotate(0, Rotate.X_AXIS),
+                new Translate(0, 0, 0)
+        );
+        Timeline timeline1 = new Timeline(               
+                new KeyFrame(
+                        Duration.seconds(0), 
+                        new KeyValue(uxRotate.angleProperty(), 0)
+                ),
+                new KeyFrame(
+                        Duration.seconds(0.5), 
+                        new KeyValue(uxRotate.angleProperty(), -90)
+                ),
+                new KeyFrame(
+                        Duration.seconds(0.5), 
+                        new KeyValue(box.translateZProperty(),(box.getTranslateZ()+5))
+                )
+        );
+        timeline1.play();          
+                break;
+                
+        case S:
+                Translate boxdpivot = new Translate();
+                Rotate dxRotate = new Rotate(0, Rotate.X_AXIS);
+        box.getTransforms().addAll (
+                boxdpivot,
+                dxRotate,
+                new Rotate(0, Rotate.X_AXIS),
+                new Translate(0, 0, 0)
+        );
+        Timeline timeline2 = new Timeline(               
+                new KeyFrame(
+                        Duration.seconds(0), 
+                        new KeyValue(dxRotate.angleProperty(), 0)
+                ),
+                new KeyFrame(
+                        Duration.seconds(0.5), 
+                        new KeyValue(dxRotate.angleProperty(), +90)
+                ),
+                new KeyFrame(
+                        Duration.seconds(0.5), 
+                        new KeyValue(box.translateZProperty(),(box.getTranslateZ()-5))
+                )
+        );
+        timeline2.play();                
+                break;
+               
+        case A:
+                Translate boxlpivot = new Translate();
+                Rotate lzRotate = new Rotate(0, Rotate.Z_AXIS);
+        box.getTransforms().addAll (
+                boxlpivot,
+                lzRotate,
+                new Rotate(0, Rotate.Z_AXIS),
+                new Translate(0, 0, 0)
+        );
+        Timeline timeline3 = new Timeline(               
+                new KeyFrame(
+                        Duration.seconds(0), 
+                        new KeyValue(lzRotate.angleProperty(), 0)
+                ),
+                new KeyFrame(
+                        Duration.seconds(0.5), 
+                        new KeyValue(lzRotate.angleProperty(), -90)
+                ),
+                new KeyFrame(
+                        Duration.seconds(0.5), 
+                        new KeyValue(box.translateXProperty(),(box.getTranslateX()-5))
+                )
+        );
+        timeline3.play(); 
+                break;
+                
+        case D:
+                Translate boxrpivot = new Translate();
+                Rotate rzRotate = new Rotate(0, Rotate.Z_AXIS);
+        box.getTransforms().addAll (
+                boxrpivot,
+                rzRotate,
+                new Rotate(0, Rotate.Z_AXIS),
+                new Translate(0, 0, 0)
+        );
+        Timeline timeline4 = new Timeline(               
+                new KeyFrame(
+                        Duration.seconds(0), 
+                        new KeyValue(rzRotate.angleProperty(), 0)
+                ),
+                new KeyFrame(
+                        Duration.seconds(0.5), 
+                        new KeyValue(rzRotate.angleProperty(), +90)
+                ),
+                new KeyFrame(
+                        Duration.seconds(0.5), 
+                        new KeyValue(box.translateXProperty(),(box.getTranslateX()+5))
+                )
+        );
+        timeline4.play();   
+                break; 
+        }
+       
+    });        
+        
+        
+        
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+}
